@@ -1,15 +1,24 @@
 import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import Login from './Components/LoginSignup/login';
-import Home from './Components/Home';
+import Home from './Pages/Home';
+import Certificate from './Pages/Certificate';
+import Complain from './Pages/Complain';
+import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
 
 
 function App() {
   return (
-    <div>
-      <Home />
-      <Login />
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/Certificate" element={<Certificate />} />
+          <Route path="/Complain" element={<Complain />} />
+        </Routes>
+      </div>
+    </Router>
+    
   );
 }
 
