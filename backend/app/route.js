@@ -1,17 +1,16 @@
-const express = require('express');
+module.exports = app => {
+    const journals = require("./controller.js");
 
-const router = express.Router();
+    var router = require("express").Router();
 
-// Define your routes here
-router.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
+    // Create a new Journal
+    router.post("/", journals.create);
 
-router.get('/users', (req, res) => {
-    // Logic to fetch users from the database
-    const users = ['John', 'Jane', 'Bob'];
-    res.json(users);
-});
+    // Retrieve all Journals
+    router.get("/", journals.findAll);
 
-// Export the router
-module.exports = router;
+    // Retrieve a single Journal with id
+    router.get("/:id", journals.findOne);
+
+    app.use('/api/journals', router);
+}

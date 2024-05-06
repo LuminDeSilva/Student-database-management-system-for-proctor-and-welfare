@@ -45,6 +45,7 @@ const Home = () => {
     // If email and password are valid, you can proceed with further actions
     // For example, you can make an API request to authenticate the user
     // Once the user is authenticated, you can redirect them to another page
+    navigate('/Dashboard');
   };
 
   return (

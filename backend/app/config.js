@@ -1,5 +1,3 @@
-const mongoUrl = 'mongodb://localhost:27017/mydatabase';
-
 module.exports = {
-    mongoUrl
+    url: "mongodb://localhost:27017/unidatabase"
 };

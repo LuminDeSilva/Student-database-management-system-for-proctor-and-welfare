@@ -1,38 +1,51 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Dashboard = () => {
-    const history = useHistory();
+    const navigate = useNavigate(); // Use useNavigate hook
+
     const [showLogout, setShowLogout] = useState(false);
 
     const handleLogout = () => {
         // Perform logout logic here
         // Redirect to home page after logout
-        history.push('/');
+        navigate('/');
     };
 
     const handleButtonClick = (page) => {
         // Redirect to the specified page
-        history.push(`/${page}`);
+        navigate(`/${page}`);
     };
 
+    const gotoStudentData = () => {
+        navigate('/studentdata');
+    }
+
     return (
-        <div>
-            <div className="icon" onClick={() => setShowLogout(!showLogout)}>
-                {/* Add your icon here */}
-            </div>
-
-            {showLogout && (
-                <button onClick={handleLogout}>Logout</button>
-            )}
-
             <div>
-                <button onClick={() => handleButtonClick('page1')}>Page 1</button>
-                <button onClick={() => handleButtonClick('page2')}>Page 2</button>
-                <button onClick={() => handleButtonClick('page3')}>Page 3</button>
+                <div className="header">
+                    <div className="logo">
+                        {/* Add your logo here */}
+                        <img src="logo.png" alt="Logo" />
+                        {/* Add your logo name here */}
+                        <h1>Logo Name</h1>
+                    </div>
+                    <div className="user">
+                        {/* Add user image icon here */}
+                        <img src="user.png" alt="User" />
+                        {/* Add user name here */}
+                        <p>User Name</p>
+                    </div>
+                    <button onClick={handleLogout}>Logout</button>
+                </div>
+                {/* Add the rest of your dashboard content here */}
+                <div className="buttons">
+                    <button onClick={() => handleButtonClick('register')}>Register</button>
+                    <button onClick={() => handleButtonClick('display')}>Display</button>
+                    <button onClick={() => handleButtonClick('studentrequest')}>Student Request</button>
+                </div>
             </div>
-        </div>
-    );
+        );
 };
 
 export default Dashboard;
