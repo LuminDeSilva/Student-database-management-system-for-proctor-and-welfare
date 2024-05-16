@@ -1,51 +1,92 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import universitylogo from '../assets/universitylogo.png';
+import axios from 'axios';
+import CountUp from 'react-countup';
 
 const Dashboard = () => {
-    const navigate = useNavigate(); // Use useNavigate hook
+    const navigate = useNavigate();
 
     const [showLogout, setShowLogout] = useState(false);
+    const [facultyCount, setFacultyCount] = useState(0);
+    const [staffCount, setStaffCount] = useState(0);
+    const [nonAcademicStaffCount, setNonAcademicStaffCount] = useState(0);
+    const [studentCount, setStudentCount] = useState(0);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/api/unidata/');
+            if (response.data.length > 0) {
+                const { faculties, academicstaff, students, nonacademicstaff } = response.data[0];
+                setFacultyCount(faculties);
+                setStaffCount(academicstaff);
+                setNonAcademicStaffCount(nonacademicstaff);
+                setStudentCount(students);
+            } else {
+                console.error('Empty response received');
+            }
+        } catch (error) {
+            console.error('Error fetching dashboard data:', error);
+        }
+    };
+    
 
     const handleLogout = () => {
-        // Perform logout logic here
-        // Redirect to home page after logout
         navigate('/');
     };
 
     const handleButtonClick = (page) => {
-        // Redirect to the specified page
         navigate(`/${page}`);
     };
 
     const gotoStudentData = () => {
-        navigate('/studentdata');
-    }
+        navigate('/DetailStudent');
+    };
+
+    const gotoStudentRequest = () => {
+        navigate('/StudentRequest');
+    };
+
+    const gotoRegister = () => {
+        navigate('/StudentData');
+    };
+
+    const gotoUpdate = () => {
+        navigate('/UpdateStudentData');
+    };
 
     return (
-            <div>
-                <div className="header">
-                    <div className="logo">
-                        {/* Add your logo here */}
-                        <img src="logo.png" alt="Logo" />
-                        {/* Add your logo name here */}
-                        <h1>Logo Name</h1>
-                    </div>
-                    <div className="user">
-                        {/* Add user image icon here */}
-                        <img src="user.png" alt="User" />
-                        {/* Add user name here */}
-                        <p>User Name</p>
-                    </div>
-                    <button onClick={handleLogout}>Logout</button>
+        <>
+            <div className='main'>
+                <div className="unilogo">
+                    <img src={universitylogo} alt="University Logo" />
                 </div>
-                {/* Add the rest of your dashboard content here */}
-                <div className="buttons">
-                    <button onClick={() => handleButtonClick('register')}>Register</button>
-                    <button onClick={() => handleButtonClick('display')}>Display</button>
-                    <button onClick={() => handleButtonClick('studentrequest')}>Student Request</button>
+                <div className='uniname'>
+                    <div>University of Vavuniya </div>
+                    <div className='sri'>Sri Lanka</div>
                 </div>
             </div>
-        );
+            <div className="header">
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+            <div className="dashboard-info">
+                <div className="stat-item"><div className="CountUp"><CountUp end={facultyCount} duration={2.75} /></div><br/>Faculties</div>
+                <div className="stat-item"><div className="CountUp"><CountUp end={staffCount} duration={2.75} /></div><br/>Staff Members</div>
+                <div className="stat-item"><div className="CountUp"><CountUp end={nonAcademicStaffCount} duration={2.75} /></div><br/>Non academic staff</div>
+                <div className="stat-item"><div className="CountUp"><CountUp end={studentCount} duration={3.25} /></div><br/>Students</div>
+            </div>
+            <div className="buttons">
+                <button onClick={gotoRegister}>Register</button>
+                <button onClick={gotoStudentData}>Display</button>
+                <button onClick={gotoStudentRequest}>Student Request</button>
+                <button onClick={gotoUpdate}>Update student</button>
+            </div>
+        </>
+    );
 };
 
 export default Dashboard;

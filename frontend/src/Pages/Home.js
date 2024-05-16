@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './Home.css';
 import universitylogo from '../assets/universitylogo.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Home = () => {
-  const navigate = useNavigate(); // useNavigate hook instead of history
+  const navigate = useNavigate(); 
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,77 +19,88 @@ const Home = () => {
   };
 
   const gotoCertificate = () => {
-    navigate('/Certificate'); // Use navigate function instead of history.push
+    navigate('/Certificate'); 
   };
   
   const redirectToUniversityWebsite = () => {
-    window.open('https://vau.ac.lk/', '_self'); // Redirect to university website in a new tab
+    window.open('https://vau.ac.lk/', '_self'); 
   };
 
   const gotoComplain = () => {
-    navigate('/Complain'); // Use navigate function instead of history.push
+    navigate('/Complain'); 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-      alert('Please enter a valid email address');
-      return;
-    }
-    
-    if (!password.trim() || password.length < 6) {
-      alert('Please enter a password with at least 6 characters');
-      return;
-    }
-
-    // If email and password are valid, you can proceed with further actions
-    // For example, you can make an API request to authenticate the user
-    // Once the user is authenticated, you can redirect them to another page
-    navigate('/Dashboard');
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/admin/login', { email, password });
+      const { adminEmail } = response.data;
+  
+      if (!adminEmail) {
+          navigate('/Dashboard');
+      } else {
+          alert('Invalid credentials');
+      }
+  } catch (error) {
+      console.error('Error logging in:', error);
+      alert('Invalid credentials');
+  }
+  
   };
+  
 
   return (
-    <div className='main'>
-      <div className="unilogo">
-        <img src={universitylogo} alt="University Logo" />
-      </div>
-      <form onSubmit={handleSubmit} className='form-box'>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input 
-            type="email" 
-            id="email" 
-            value={email} 
-            onChange={handleEmailChange} 
-            required 
-          />
+      <>
+      <div className='main'>
+          <div className="unilogo">
+            <img src={universitylogo} alt="University Logo" />
+          </div>
+          <div className='uniname'>
+              <div >University of Vavuniya </div>
+              <div className='sri'>Sri Lanka</div> 
+                
+          </div>
+          <form onSubmit={handleSubmit} className='form-box'>
+            <div>
+              <label htmlFor="email">Email:</label>
+              <label htmlFor="password">Password:</label>
+              <br></br>
+              <input 
+                type="email" 
+                id="email" 
+                value={email} 
+                onChange={handleEmailChange} 
+                required 
+              />
+              
+              <input 
+                type="password" 
+                id="password" 
+                value={password} 
+                onChange={handlePasswordChange} 
+                required 
+              />
+            </div>
+            <div>
+              <button type="submit">Sign In</button>
+            </div>
+          </form>
+          
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input 
-            type="password" 
-            id="password" 
-            value={password} 
-            onChange={handlePasswordChange} 
-            required 
-          />
+        <div className='container'>
+            <div className='container1'>
+                <h1>Welcome</h1>
+                <h2>Proctor and Welfare</h2>
+                <h3>Web Portal</h3>
+            </div>
+            <div className='button-container'>
+                <button onClick={gotoCertificate}>Request Character Certificate</button>
+                <button onClick={redirectToUniversityWebsite}>University Website</button>
+                <button onClick={gotoComplain}>Complain</button>
+            </div>
         </div>
-        <div>
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
-      <div className='container1'>
-        <h1>Welcome</h1><br/>
-        <h2>Proctor and Welfare</h2>
-        <h3>Web Portal</h3>
-      </div>
-      <div className='button-container'>
-        <button onClick={gotoCertificate}>Request Character Certificate</button>
-        <button onClick={redirectToUniversityWebsite}>University Website</button>
-        <button onClick={gotoComplain}>Complain</button>
-      </div>
-    </div>
+      </>
   );
 };
 
